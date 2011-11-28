@@ -1,6 +1,6 @@
 {
     "name" : "smtp-protocol",
-    "description" : "implements the smtp protocol abstractly without doing any i/o",
+    "description" : "implements the smtp protocol for clients and servers",
     "version" : "0.0.0",
     "repository" : {
         "type" : "git",

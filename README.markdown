@@ -1,5 +1,4 @@
 smtp-protocol
 =============
 
-Implements the smtp protocol abstractly without doing any I/O.
-
+Implements the smtp protocol for clients and servers.
