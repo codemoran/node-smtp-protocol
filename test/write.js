@@ -18,13 +18,14 @@ test('writes', function (t) {
     output = '';
     
     w(123, 'oh\nhello');
-    t.deepEqual(output, '123-beep\r\n123 hello\r\n');
+    t.deepEqual(output, '123-oh\r\n123 hello\r\n');
     output = '';
     
-    w(555, 'abc\r\ndef\nhijkl');
-    w(555, 'mno\npq');
-    w(555, 'rstuv');
-    t.deepEqual(output, '555-abc\r\n555-def\r\n555-hijklmno\r\n555-pqrstuv\r\n');
+    w(555, [ 'abc\r\ndef\nhijkl', 'mno\npq', 'rstuv' ]);
+    t.deepEqual(
+        output,
+        '555-abc\r\n555-def\r\n555-hijkl\r\n555-mno\r\n555-pq\r\n555 rstuv\r\n'
+    );
     output = '';
     
     t.end();
