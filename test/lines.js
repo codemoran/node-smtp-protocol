@@ -5,7 +5,7 @@ var chunky = require('chunky');
 var Stream = require('net').Stream;
 
 test('multi-line code parsing', function (t) {
-    for (var i = 0; i < 1; i++) {
+    function check (end) {
         var stream = new Stream;
         var output = [];
         
@@ -35,8 +35,17 @@ test('multi-line code parsing', function (t) {
                     [ 45, [ 'beep' ] ],
                     [ 50, [ 'boop' ] ],
                 ]);
-                t.end();
+                end();
             }
         }, 10);
     }
+    
+    t.plan(20);
+    var times = 0;
+    check(function end () {
+        if (++times === 20) {
+            t.end();
+        }
+        else check(end);
+    });
 });
