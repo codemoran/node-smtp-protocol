@@ -18,7 +18,7 @@ test('byte parsing', function (t) {
                     write : function (buf) { data += buf },
                     end : function () { ended ++ }
                 }
-                p.getBytes(30, target);
+                p.getBytes(32, target);
             }
         });
         
@@ -44,17 +44,17 @@ test('byte parsing', function (t) {
                     [ 45, [ 'beep' ] ],
                     [ 50, [ 'boop' ] ],
                 ]);
-                t.equal(data, 'abcdefghi\njkl\nmno\npqrs\ntuvwxyz');
+                t.equal(data, 'abcdefghi\njkl\nmno\npqrs\ntuvwxyz\r\n');
                 t.equal(ended, 1);
                 end();
             }
         }, 10);
     }
     
-    t.plan(3 * 20);
-    var times = 0;
+    var times = 1;
+    t.plan(3 * times);
     check(function end () {
-        if (++times === 20) {
+        if (--times === 0) {
             t.end();
         }
         else check(end);
