@@ -25,7 +25,7 @@
     "dependencies" : {
     },
     "devDependencies" : {
-        "tap" : "0.0.x",
+        "tap" : "0.0.x"
     },
     "engines" : {
         "node" : ">=0.4.0"

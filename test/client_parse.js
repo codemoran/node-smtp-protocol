@@ -23,7 +23,8 @@ test('multi-line code parsing', function (t) {
                     });
                 }
                 else if (cmd.name === 'quit') {
-                    t.equal(output[0].name, 'ehlo');
+                    t.equal(output[0].name, 'greeting');
+                    t.equal(output[0].greeting, 'ehlo');
                     t.equal(output[0].domain, 'localhost');
                     
                     t.equal(output[1].name, 'mail');
@@ -69,7 +70,7 @@ test('multi-line code parsing', function (t) {
     }
     
     var times = 20;
-    t.plan(times * 8);
+    t.plan(times * 9);
     check(function end () {
         if (--times === 0) {
             t.end();
