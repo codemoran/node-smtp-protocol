@@ -1,5 +1,5 @@
 var test = require('tap').test;
-var parser = require('../lib/parser');
+var parser = require('../lib/server/parser');
 
 var chunky = require('chunky');
 var Stream = require('net').Stream;

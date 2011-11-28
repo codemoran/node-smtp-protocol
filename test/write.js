@@ -1,5 +1,5 @@
 var test = require('tap').test;
-var write = require('../lib/write');
+var write = require('../lib/server/write');
 var Stream = require('net').Stream;
 
 test('writes', function (t) {
