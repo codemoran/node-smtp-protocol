@@ -21,6 +21,7 @@ test('multi-line code parsing', function (t) {
             '200 three',
             '45 beep',
             '50 boop',
+            '22',
             ''
         ].join('\r\n')));
         
@@ -34,6 +35,7 @@ test('multi-line code parsing', function (t) {
                     [ 200, [ 'one', 'two', 'three' ] ],
                     [ 45, [ 'beep' ] ],
                     [ 50, [ 'boop' ] ],
+                    [ 22, [] ],
                 ]);
                 end();
             }
