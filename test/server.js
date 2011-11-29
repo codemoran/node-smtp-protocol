@@ -4,6 +4,8 @@ var net = require('net');
 var chunky = require('chunky');
 
 test('server accept/reject', function (t) {
+    t.plan(4);
+    
     var port = Math.floor(Math.random() * 5e4 + 1e4);
     var server = smtp.createServer('localhost', function (req) {
         req.on('to', function (to, ack) {
@@ -16,10 +18,14 @@ test('server accept/reject', function (t) {
         });
         
         req.on('message', function (stream, ack) {
-            console.log('from: ' + req.from);
-            console.log('to: ' + req.to);
+            t.equal(req.from, 'beep@localhost');
+            t.equal(req.to, 'boop@localhost');
             
-            stream.pipe(process.stdout, { end : false });
+            var data = '';
+            stream.on('data', function (buf) { data += buf });
+            stream.on('end', function () {
+                t.equal(data, 'Beep boop.\r\nI am a computer.\r\n');
+            });
             ack.accept();
         });
     });
@@ -51,7 +57,7 @@ test('server accept/reject', function (t) {
                 '250 localhost',
                 'helo',
                 '250',
-                'mail from: <beep@example.com>',
+                'mail from: <beep@localhost>',
                 '250',
                 'rcpt to: <boop@example.com>',
                 '553-Recipients must be on these domains:',
@@ -66,8 +72,10 @@ test('server accept/reject', function (t) {
                 '250',
                 'quit',
                 '221 Bye!',
+                ''
             ].join('\r\n'));
             t.end();
+            server.close();
         });
     });
 });

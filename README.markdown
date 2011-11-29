@@ -167,6 +167,9 @@ Many request events have a trailing `ack` parameter.
 If there are any listeners for an acknowledgeable event, exactly one listener
 MUST call either `ack.accept()` or `ack.reject()`.
 
+Consult [this handy list of SMTP codes](http://www.greenend.org.uk/rjk/2000/05/21/smtp-replies.html#SEND)
+for which codes to use in acknowledgement responses.
+
 ack.accept(code=250, message)
 -----------------------------
 
