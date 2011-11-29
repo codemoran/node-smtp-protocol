@@ -34,12 +34,19 @@ test('client/server', function (t) {
     server.listen(port, function () {
         var script = '';
         var c = smtp.connect(port, sendData);
+        
+        var _write = c.write;
+        c.write = function (buf) {
+            script += buf;
+            _write.apply(c, arguments);
+        };
+        
         c.on('data', function (buf) { script += buf });
         
         c.on('end', function () {
             t.equal(script, [
                 '250 localhost',
-                'HELO',
+                'HELO localhost',
                 '250',
                 'MAIL FROM: <beep@localhost>',
                 '250',
@@ -92,16 +99,13 @@ function sendData (mail) {
                 stream.emit('data', 'Beep boop.\r\n');
             }, 10);
             setTimeout(function () {
-                stream.emit('data', '...I am a computer.\r\n');
+                stream.emit('data', '...I am a computer.');
                 stream.emit('end');
             }, 20);
             mail.message(stream, this);
         })
         .seq(function () {
             mail.quit(this);
-        })
-        .seq(function () {
-            console.dir(this.vars);
         })
     ;
 }
