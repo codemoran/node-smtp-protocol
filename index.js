@@ -22,19 +22,20 @@ exports.connect = function (port, host, cb) {
         return acc;
     }, {});
     var cb = args.function;
+    var stream;
     
     if (args.string && args.string.match(/^[.\/]/)) {
         // unix socket
-        var stream = net.createConnection(args.string, function () {
-            cb(proto.server(stream));
-        });
+        stream = net.createConnection(args.string);
     }
     else {
         var port = args.number || 25;
         var host = args.string || 'localhost';
-        var stream = net.createConnection(port, host, function () {
-            cb(proto.server(stream));
-        });
+        stream = net.createConnection(port, host);
     }
+    
+    stream.on('connect', function () {
+        cb(proto.server(stream));
+    });
     return stream;
 };
