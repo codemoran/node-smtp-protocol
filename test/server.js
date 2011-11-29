@@ -24,7 +24,7 @@ test('server accept/reject', function (t) {
             var data = '';
             stream.on('data', function (buf) { data += buf });
             stream.on('end', function () {
-                t.equal(data, 'Beep boop.\r\nI am a computer.\r\n');
+                t.equal(data, 'Beep boop.\r\n...I am a computer.\r\n');
             });
             ack.accept();
         });
@@ -38,7 +38,7 @@ test('server accept/reject', function (t) {
             'rcpt to: <boop@localhost>',
             'data',
             'Beep boop.',
-            'I am a computer.',
+            '....I am a computer.',
             '.',
             'quit',
         ];
@@ -67,7 +67,7 @@ test('server accept/reject', function (t) {
                 'data',
                 '354',
                 'Beep boop.',
-                'I am a computer.',
+                '....I am a computer.',
                 '.',
                 '250',
                 'quit',
