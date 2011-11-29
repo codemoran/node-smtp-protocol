@@ -69,8 +69,62 @@ Beep boop.
 I am a computer.
 ```
 
-methods
-=======
+client
+------
+
+``` js
+var smtp = require('../');
+var seq = require('seq');
+var fs = require('fs');
+
+smtp.connect('localhost', 25, function (mail) {
+    seq()
+        .seq_(function (next) {
+            mail.on('greeting', function (code, lines) {
+                console.dir(lines);
+                next();
+            });
+        })
+        .seq(function (next) {
+            mail.helo('localhost', this.into('helo'));
+        })
+        .seq(function () {
+            mail.from('substack', this.into('from'));
+        })
+        .seq(function () {
+            mail.to('root', this.into('to'));
+        })
+        .seq(function () {
+            mail.data(this.into('data'))
+        })
+        .seq(function () {
+            mail.message(fs.createReadStream('/etc/issue'), this.into('message'));
+        })
+        .seq(function () {
+            mail.quit(this.into('quit'));
+        })
+        .seq(function () {
+            console.dir(this.vars);
+        })
+    ;
+});
+```
+
+output:
+
+```
+$ node example/client.js
+[ 'beep ESMTP Postfix (Ubuntu)' ]
+{ helo: 250,
+  from: 250,
+  to: 250,
+  data: 354,
+  message: 250,
+  quit: 221 }
+```
+
+server methods
+==============
 
 var smtp = require('smtp-protocol')
 
@@ -81,13 +135,8 @@ Return a new `net.Server` so you can `.listen()` on a port.
 
 `cb(req)` fires for new connection. See the "requests" section below.
 
-smtp.createConnection(...)
---------------------------
-
-Not yet implemented.
-
-requests
-========
+server requests
+===============
 
 events
 ------
@@ -159,8 +208,8 @@ The greeting command. One of `'helo'`, `'ehlo'`, or `'lhlo'`.
 
 The domain specified in the greeting.
 
-acknowledgements
-================
+server acknowledgements
+=======================
 
 Many request events have a trailing `ack` parameter.
 
@@ -179,6 +228,81 @@ ack.reject(code, message)
 -------------------------
 
 Reject the command. Any staged state modifications from the command are discarded.
+
+client methods
+==============
+
+For all `client` methods, `cb(err, code, lines)` fires with the server response.
+
+var stream = smtp.connect(host='localhost', port=25, cb)
+--------------------------------------------------------
+
+Create a new SMTP client connection.
+
+`host`, `port`, and `cb` are detected by their types in the arguments array so
+they may be in any order.
+
+You can use unix sockets by supplying a string argument that matches `/^[.\/]/`.
+
+`cb(client)` fires when the connection is ready.
+
+client.helo(domain, cb)
+-----------------------
+
+Greet the server with the `domain` string.
+
+`cb(err, code, lines)` fires with the server response.
+
+client.from(addr, ext=undefined, cb)
+------------------------------------
+
+Set the sender to the email address `addr` with optional extension data `ext`.
+
+`cb(err, code, lines)` fires with the server response.
+
+client.to(addr, ext=undefined, cb)
+----------------------------------
+
+Set the recipient to the email address `addr` with optional extension data `ext`.
+
+`cb(err, code, lines)` fires with the server response.
+
+client.data(cb)
+---------------
+
+Tell the server that we are about to transmit data.
+
+`cb(err, code, lines)` fires with the server response.
+
+client.message(stream, cb)
+--------------------------
+
+Write a message body from `stream` to the server.
+
+`cb(err, code, lines)` fires with the server response.
+
+client.quit(cb)
+---------------
+
+Ask the server to sever the connection.
+
+`cb(err, code, lines)` fires with the server response.
+
+client.reset(cb)
+----------------
+
+Ask the server to reset the connection.
+
+`cb(err, code, lines)` fires with the server response.
+
+client events
+=============
+
+'greeting', code, lines
+-----------------------
+
+Fired when the stream initializes. This should be the first message that the
+server sends.
 
 install
 =======
