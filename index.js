@@ -17,17 +17,24 @@ exports.createServer = function (domain, cb) {
 };
 
 exports.connect = function (port, host, cb) {
-    if (typeof port === 'string' && typeof host === 'number') {
-        var host_ = port, port_ = host;
-        host = host_, port = port_;
-    }
-    if (typeof host === 'function') {
-        cb = host;
-        host = 'localhost';
-    }
+    var args = [].slice.call(arguments).reduce(function (acc, arg) {
+        acc[typeof arg] = arg;
+        return acc;
+    }, {});
+    var cb = args.function;
     
-    var stream = net.createConnection(port, host, function () {
-        cb(proto.server(stream));
-    });
+    if (args.string && args.string.match(/^[.\/]/)) {
+        // unix socket
+        var stream = net.createConnection(args.string, function () {
+            cb(proto.server(stream));
+        });
+    }
+    else {
+        var port = args.number || 25;
+        var host = args.string || 'localhost';
+        var stream = net.createConnection(port, host, function () {
+            cb(proto.server(stream));
+        });
+    }
     return stream;
 };
