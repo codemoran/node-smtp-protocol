@@ -23,6 +23,7 @@
         "test" : "tap test/*.js"
     },
     "dependencies" : {
+        "event-stream" : "0.6.x"
     },
     "devDependencies" : {
         "tap" : "0.0.x",
