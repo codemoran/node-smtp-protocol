@@ -1,7 +1,7 @@
 {
     "name" : "smtp-protocol",
     "description" : "implements the smtp protocol for clients and servers",
-    "version" : "0.1.0",
+    "version" : "0.1.1",
     "repository" : {
         "type" : "git",
         "url" : "git://github.com/substack/node-smtp-protocol.git"

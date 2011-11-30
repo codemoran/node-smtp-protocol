@@ -6,7 +6,7 @@ var seq = require('seq');
 var fs = require('fs');
 
 test('client/server', function (t) {
-    t.plan(4);
+    t.plan(5);
     
     var port = Math.floor(Math.random() * 5e4 + 1e4);
     var server = smtp.createServer('localhost', function (req) {
@@ -29,6 +29,10 @@ test('client/server', function (t) {
                 t.equal(data, 'Beep boop.\r\n...I am a computer.\r\n');
             });
             ack.accept();
+        });
+        
+        req.on('quit', function () {
+            t.ok(true);
         });
     });
     server.listen(port, function () {

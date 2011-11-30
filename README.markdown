@@ -181,6 +181,14 @@ This event has no implicit `ack.accept()` when there are no listeners.
 
 Emitted when the body after the `DATA` command finishes.
 
+### 'reset'
+
+Emitted when the connection is reset from a `RSET` command.
+
+### 'quit'
+
+Emitted when the connection is closed from a `QUIT` command.
+
 properties
 ----------
 
